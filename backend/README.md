@@ -38,7 +38,7 @@ If you want to stand out by going the extra mile, you could do some of the follo
 ## Delivering your solution
 Please provide us with a link to your personal repository and a link to the running app if you deployed it.
 
-#Response
+# Response
 To get started, follow the steps below:
 
 1.- Create a virtualenv:
