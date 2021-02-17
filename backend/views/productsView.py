@@ -1,17 +1,22 @@
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Float
+from views.masterDB import db
 
-Base = declarative_base()
-
-class ProductView(Base):
+class ProductView(db.Model):
     __tablename__ = 'products'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     sku = Column(Integer, unique=True)
-    name = Column(String, unique=True)
-    brand = Column(String)
+    name = Column(String(100), unique=True)
+    brand = Column(String(100))
     price = Column(Float)
     views = Column(Integer)
 
-    def __repr__(self):
-        return '<User {}>'.format(self.username)
+    def to_json(self):
+        return {
+            "id" : self.id,
+            "sku" : self.sku,
+            "name" : self.name,
+            "brand" : self.brand,
+            "views" : self.views,
+            "price" : self.price
+        }

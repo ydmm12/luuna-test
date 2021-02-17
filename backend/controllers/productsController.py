@@ -1,30 +1,33 @@
 from views.productsView import ProductView
-from services.database import getDB
-
-DB = getDB()
 
 def get_products():
-    return {"body":(
-        {"id": 1},
-    )}
+    return [product.to_json() for product in ProductView.query.all()]
 
 def get_product(product_id):
-    return {"id": product_id}
+    product = ProductView.query.filter_by(id=product_id).first()
+    product.views +=1
+    return product.to_json()
 
 def create_product(product):
-    return product
+    productView = ProductView(
+        sku = product["sku"],
+        name = product["name"],
+        brand = product["brand"],
+        price = product["price"],
+        views = 0
+    )
+    return productView
 
-def modify_product(product_id, product):
-    Product = ProductView.query.filter_by(id=product_id)
-    modified = {}
-    for key in product:
-        if getattr(Product,key) != product[key]:
-            setattr(Product, key, product[key])
-            modified[key] = product[key]
+def modify_product(product_id, data):
+    product = ProductView.query.filter_by(id=product_id).first()
+    for field in data:
+        if getattr(product, field) != data[field]:
+            setattr(product, field, data[field])
     return product
 
 def delete_product(product_id):
     try:
-        return ProductView.query.filter_by(id=product_id).delete()
+        ProductView.query.filter_by(id=product_id).delete()
+        return "Done"
     except:
         return "Error in ID"

@@ -1,14 +1,13 @@
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
+from views.masterDB import db
 
-Base = declarative_base()
-
-class UserView(Base):
+class UserView(db.Model):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
-    username = Column(String, unique=True)
-    email = Column(String, unique=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(100), unique=True)
+    email = Column(String(100), unique=True)
+    password = Column(String(100))
 
     def to_json(self):
         return {
