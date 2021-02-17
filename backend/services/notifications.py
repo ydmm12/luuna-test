@@ -1,16 +1,21 @@
-import smtplib
+import smtplib, ssl
+from controllers.usersController import getUsersMail
+from config import SMTPCONFIG
 
-def send_message(message_type, product):
+def send_message(data, user_id):
+    context = ssl.create_default_context()
 
-    sender = 'ydmm12.dvt@gmail.com'
-    receivers = ['yamil_David@hotmail.com']
-    message = """From: From Person <from@fromdomain.com>
-To: To Person <to@todomain.com>
-Subject: SMTP e-mail test
+    sender = SMTPCONFIG["email"]
+    receivers = getUsersMail(user_id)
+    content = ""
+    for field in data:
+        content+="{name} set {value}\n".format(name=field, value=data[field])
+    message = """\
+Subject: Changes
 
-This is a test e-mail message.
-"""
-    smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
-    smtpObj.sendmail(sender, receivers, message)         
-    print("Successfully sent email")
-send_message(1,2)
+Changes in:
+{}
+""".format(content)
+    with smtplib.SMTP_SSL("smtp.gmail.com", SMTPCONFIG["port"], context=context) as server:
+        server.login(SMTPCONFIG["email"], SMTPCONFIG["password"])
+        server.sendmail(sender_email, receiver_email, message)

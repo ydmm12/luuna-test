@@ -16,37 +16,57 @@ db.create_all()
 
 class Users(MethodView):
     def get(self, user_id):
-        if user_id:
-            response = get_user(user_id)
-        else:
-            response = get_users()
-        return {
-            "result": response
-        }
-    def post(self):
-        response = decode_auth_token(request.headers.get('Authorization'))
-        if type(response) is not str:
-            user = create_user(request.get_json())
-            db.session.add(user)
-            db.session.commit()
+        try:
+            if user_id:
+                response = get_user(user_id)
+            else:
+                response = get_users()
             return {
-                "result": user.to_json()
+                "result": response
             }
-        else:
+        except:
             return {
-                "Error": response
+                "Error": "Doesn't exist"
+            }
+    def post(self):
+        try:
+            response = decode_auth_token(request.headers.get('Authorization'))
+            if type(response) is not str:
+                user = create_user(request.get_json())
+                db.session.add(user)
+                db.session.commit()
+                return {
+                    "result": user.to_json()
+                }
+            else:
+                return {
+                    "Error": response
+                }
+        except:
+            return {
+                "Error": "Data error"
             }
     def put(self, user_id):
-        response = decode_auth_token(request.headers.get('Authorization'))
-        if type(response) is not str:
-            user = modify_user(user_id, request.get_json())
-            db.session.commit()
+        try:
+            response = decode_auth_token(request.headers.get('Authorization'))
+            if type(response) is not str:
+                user = modify_user(user_id, request.get_json())
+                if user:
+                    db.session.commit()
+                    return {
+                        "result": user.to_json()
+                    }
+                else:
+                    return {
+                        "Error": "User doesn't exist"
+                    }
+            else:
+                return {
+                    "Error": response
+                }
+        except:
             return {
-                "result": user.to_json()
-            }
-        else:
-            return {
-                "Error": response
+                "Error": "Data error"
             }
     def delete(self, user_id):
         response = decode_auth_token(request.headers.get('Authorization'))
@@ -71,38 +91,58 @@ class LoginAPI(MethodView):
 
 class Products(MethodView):
     def get(self, product_id):
-        if product_id:
-            response = get_product(product_id)
-        else:
-            response = get_products()
-        db.session.commit()
-        return {
-            "result": response
-        }
-    def post(self):
-        response = decode_auth_token(request.headers.get('Authorization'))
-        if type(response) is not str:
-            product = create_product(request.get_json())
-            db.session.add(product)
+        try:
+            if product_id:
+                response = get_product(product_id)
+            else:
+                response = get_products()
             db.session.commit()
             return {
-                "result": product.to_json()
+                "result": response
             }
-        else:
+        except:
             return {
-                "Error": response
+                "Error": "Doesn't exist"
+            }
+    def post(self):
+        try:
+            response = decode_auth_token(request.headers.get('Authorization'))
+            if type(response) is not str:
+                product = create_product(request.get_json())
+                db.session.add(product)
+                db.session.commit()
+                return {
+                    "result": product.to_json()
+                }
+            else:
+                return {
+                    "Error": response
+                }
+        except:
+            return {
+                "Error": "Data error"
             }
     def put(self, product_id):
-        response = decode_auth_token(request.headers.get('Authorization'))
-        if type(response) is not str:
-            product = modify_product(product_id, request.get_json())
-            db.session.commit()
+        try:
+            response = decode_auth_token(request.headers.get('Authorization'))
+            if type(response) is not str:
+                product = modify_product(product_id, request.get_json(), response)
+                if product:
+                    db.session.commit()
+                    return {
+                        "result": product.to_json()
+                    }
+                else:
+                    return {
+                        "Error": "Product doesn't exist"
+                    }
+            else:
+                return {
+                    "Error": response
+                }
+        except:
             return {
-                "result": product.to_json()
-            }
-        else:
-            return {
-                "Error": response
+                "Error": "Data error"
             }
     def delete(self, product_id):
         response = decode_auth_token(request.headers.get('Authorization'))

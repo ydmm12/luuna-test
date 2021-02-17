@@ -4,6 +4,10 @@ import datetime
 
 SECRET = 'Luuna-secret-key'
 
+def getUsersMail(user_id):
+    users = UserView.query.filter(UserView.id != int(user_id)).all()
+    return [user.email for user in users]
+
 def get_users():
     return [user.to_json() for user in UserView.query.all()]
 
@@ -64,3 +68,4 @@ def decode_auth_token(auth_header):
             response = 'Invalid token. Please log in again.'
     else:
         response = "Unauthorized"
+    return response

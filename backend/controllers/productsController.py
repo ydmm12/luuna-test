@@ -1,4 +1,5 @@
 from views.productsView import ProductView
+from services.notifications import send_message
 
 def get_products():
     return [product.to_json() for product in ProductView.query.all()]
@@ -18,11 +19,14 @@ def create_product(product):
     )
     return productView
 
-def modify_product(product_id, data):
+def modify_product(product_id, data, user_id):
+    changes = {}
     product = ProductView.query.filter_by(id=product_id).first()
     for field in data:
         if getattr(product, field) != data[field]:
             setattr(product, field, data[field])
+            changes[field] = data[field]
+    send_message(changes, user_id)
     return product
 
 def delete_product(product_id):

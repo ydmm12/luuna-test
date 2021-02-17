@@ -37,3 +37,21 @@ If you want to stand out by going the extra mile, you could do some of the follo
 
 ## Delivering your solution
 Please provide us with a link to your personal repository and a link to the running app if you deployed it.
+
+#Response
+To get started, follow the steps below:
+
+1.- Create a virtualenv:
+python3 -m venv env
+
+2.- Enter in the venv:
+. env/bin/activate
+
+3.- Install pip dependencys:
+pip install -r requirements.txt
+
+4.- Fill the config file with the parameters:
+vim config.py
+
+5.- Run the server:
+python3 api.py develop

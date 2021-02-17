@@ -1,6 +1,14 @@
+#Fill with the db's fields
 DBCONFIG = {
-    "server": "127.0.0.1:3306",
-    "user": "yamil",
-    "password": "yamil",
-    "db": "test"
+    "server": "",
+    "user": "",
+    "password": "",
+    "db": ""
+}
+
+#Fill with the SMTP server fields
+SMTPCONFIG = {
+    "email": "",
+    "password": "",
+    "port": ""
 }
